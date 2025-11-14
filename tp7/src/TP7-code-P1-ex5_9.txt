@@ -1,0 +1,128 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+  unsigned short numero;
+  char* voie;
+  unsigned int code;
+  char* ville;
+  
+} Adresse;
+
+/*
+Exercice 1.5 : En général, une personne peut également être identifiée par une adresse postale. 
+               Modifier le type Personne afin d’intégrer une adresse postale dans la description d’une personne. 
+               (Penser à l’encapsulation).
+*/
+typedef struct {
+    char* nom;
+    char* prenom;
+    unsigned short age;
+    Adresse* adresse;
+} Personne;
+
+/*
+Cette fonction doit etre declaree avant lirePersonne
+car celle-ci l'utilise (voir exercice 1.6)
+*/
+Adresse* lireAdresse(){
+    Adresse* a = (Adresse*)malloc(sizeof(Adresse));
+    a->voie = (char*) malloc(255*sizeof(char));
+    a->ville = (char*) malloc(255*sizeof(char));
+    
+    printf("Saisir une adresse (numero rue code ville): ");
+    
+    scanf("%hd %s %d %s", &(a->numero), a->voie, &(a->code), a->ville);
+    
+    return a;
+}
+
+/*
+Exercice 1.6 : Modifier la fonction lirePersonne afin de lire également l’adresse de la personne en cours de saisie. 
+              Conseil : N’hésitez pas à appeler des fonctions existantes.
+*/
+Personne* lirePersonne(void) {
+    Personne* p = (Personne*)malloc(sizeof(Personne));
+    p->nom = (char*) malloc(255*sizeof(char));
+    p->prenom = (char*) malloc(255*sizeof(char));
+    
+    printf("Saisir une personne (nom prenom age): ");
+    
+    scanf("%s %s %hd", p->nom, p->prenom, &(p->age));
+    
+    p->adresse = lireAdresse();
+    
+    return p;
+}
+
+/*
+Exercice 1.7 : Ecrire une fonction void ecrireAdresse(Adresse*) 
+               qui prends en entrée un pointeur vers une Adresse 
+               et permet d’en écrire toutes les données sur la sortie standard.
+*/
+void ecrireAdresse(Adresse* a) {
+    if (a != NULL)
+      printf("%hd %s %d %s", a->numero, a->voie, a->code, a->ville);
+    else
+      printf("Pas d'adresse connue.");
+}
+
+/*
+Exercice 1.8 : Ecrire une fonction void ecrirePersonne(Personne* p) 
+               qui prends en entrée une Personne et permet d’en écrire toutes les données, 
+               y compris l’adresse postale. Conseil : L’appel de fonctions est toujours votre ami.
+*/
+void ecrirePersonne(Personne* p) {
+    if (p != NULL){
+        printf("%s, %s - %hd\n", p->nom, p->prenom, p->age);
+        ecrireAdresse(p->adresse);
+    } else {
+        printf("Personne inconnue.");
+    }
+}
+
+/*
+Exercice 1.9 : Ecrire un algorithme int memeAdresse(Personne* a, Personne* b) 
+               qui prends en entrée deux pointeurs vers des Personne et qui retourne 1 si celles-ci habitent à la même adresse et 0 sinon.
+*/
+int memeAdresse(Personne* a, Personne* b) {
+    if ((a == NULL) || (b == NULL))
+      return 0;
+      
+    if ((a->adresse == NULL) || (b->adresse == NULL))
+      return 0;
+      
+    if (a->adresse->numero != b->adresse->numero)
+      return 0;
+      
+    if (a->adresse->code != b->adresse->code)
+      return 0;
+      
+    if (strcmp(a->adresse->voie, b->adresse->voie) != 0)
+      return 0;
+      
+    if (strcmp(a->adresse->ville, b->adresse->ville) != 0)
+      return 0;
+    
+    return 1;
+}
+
+
+int main()
+{
+    Personne* p1 = lirePersonne();
+    ecrirePersonne(p1);
+    printf("\n");
+
+    Personne* p2 = lirePersonne();
+    ecrirePersonne(p2);
+    printf("\n");
+
+    if (memeAdresse(p1, p2))
+      printf("Meme adresse.\n");
+    else
+      printf("Adresse differente.\n");
+
+    return 0;
+}
