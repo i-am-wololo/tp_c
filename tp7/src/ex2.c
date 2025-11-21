@@ -56,7 +56,6 @@ Rue* Population(){
 		getchar();
 		printf("continue? [y/n]\n");
 		scanf("%s", reponse);
-		printf("\n");
 	};
 	rue->first = voisin;
 	return rue;
@@ -73,7 +72,18 @@ int voisinsAvant(Voisin* v){
 	return i;
 }
 
-int voisinsApres(Voisin* v);
+int voisinsApres(Voisin* v){
+	if (v == NULL) return -1;
+	Voisin* voisin = v;
+	int i = 0;
+	while (voisin->suivant != NULL) {
+		voisin = voisin->suivant;
+		i++;
+	}
+	return i;
+}
+
+int
 
 
 int main(){
